@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\HAPE\\Desktop\\Test Skill Digdaya Olah Teknologi Indonesia  .Net\\APISantuy\\APISantuy.csproj": {}
+    "C:\\Users\\HAPE\\Desktop\\Test Skill Digdaya Olah Teknologi Indonesia  .Net\\APIsantuy\\APISantuy.csproj": {}
   },
   "projects": {
-    "C:\\Users\\HAPE\\Desktop\\Test Skill Digdaya Olah Teknologi Indonesia  .Net\\APISantuy\\APISantuy.csproj": {
+    "C:\\Users\\HAPE\\Desktop\\Test Skill Digdaya Olah Teknologi Indonesia  .Net\\APIsantuy\\APISantuy.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\HAPE\\Desktop\\Test Skill Digdaya Olah Teknologi Indonesia  .Net\\APISantuy\\APISantuy.csproj",
+        "projectUniqueName": "C:\\Users\\HAPE\\Desktop\\Test Skill Digdaya Olah Teknologi Indonesia  .Net\\APIsantuy\\APISantuy.csproj",
         "projectName": "APISantuy",
-        "projectPath": "C:\\Users\\HAPE\\Desktop\\Test Skill Digdaya Olah Teknologi Indonesia  .Net\\APISantuy\\APISantuy.csproj",
+        "projectPath": "C:\\Users\\HAPE\\Desktop\\Test Skill Digdaya Olah Teknologi Indonesia  .Net\\APIsantuy\\APISantuy.csproj",
         "packagesPath": "C:\\Users\\HAPE\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\HAPE\\Desktop\\Test Skill Digdaya Olah Teknologi Indonesia  .Net\\APISantuy\\obj\\",
+        "outputPath": "C:\\Users\\HAPE\\Desktop\\Test Skill Digdaya Olah Teknologi Indonesia  .Net\\APIsantuy\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\HAPE\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -48,6 +48,10 @@
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[8.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[9.0.4, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
