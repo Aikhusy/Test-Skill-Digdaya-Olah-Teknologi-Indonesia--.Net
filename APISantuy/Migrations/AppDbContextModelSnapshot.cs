@@ -150,7 +150,7 @@ namespace APISantuy.Migrations
                     b.HasOne("User", "AssignedBy")
                         .WithMany()
                         .HasForeignKey("AssignedById")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("City", "City")

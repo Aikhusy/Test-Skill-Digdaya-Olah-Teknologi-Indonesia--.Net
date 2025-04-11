@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APISantuy.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250411181836_AddNewModels")]
-    partial class AddNewModels
+    [Migration("20250411183855_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -153,7 +153,7 @@ namespace APISantuy.Migrations
                     b.HasOne("User", "AssignedBy")
                         .WithMany()
                         .HasForeignKey("AssignedById")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("City", "City")

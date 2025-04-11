@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace APISantuy.Migrations
 {
     /// <inheritdoc />
-    public partial class AddNewModels : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -93,7 +93,7 @@ namespace APISantuy.Migrations
                         column: x => x.AssignedById,
                         principalTable: "tbl_m_user",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_tbl_t_trip_tbl_m_user_EmployeeId",
                         column: x => x.EmployeeId,
