@@ -1,9 +1,12 @@
 using Microsoft.EntityFrameworkCore;
-using YourNamespace.Models;
+// using APISantuy.Models;
 
-public class AppDbContext : DbContext
-{
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
 
-    public DbSet<Product> Products { get; set; }
-}
+
+    public class AppDbContext : DbContext
+    {
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
+
+        // public DbSet<Product> Products { get; set; }
+    }
+

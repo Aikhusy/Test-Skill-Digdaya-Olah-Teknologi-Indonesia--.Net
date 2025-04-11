@@ -1,13 +1,15 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Konfigurasi JWT
 var jwtConfig = builder.Configuration.GetSection("Jwt");
-var key = Encoding.UTF8.GetBytes(jwtConfig["Key"]);
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+var key = Encoding.UTF8.GetBytes(jwtConfig["Key"] ?? "default-secret-key");
+
+// Tambahkan layanan
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -31,16 +33,13 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAuthorization();
+builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+var app = builder.Build(); // Ini harus duluan sebelum dipakai
 
-app.UseAuthentication(); 
-app.UseAuthorization();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
+// Konfigurasi middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -48,7 +47,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseRouting();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
+
+// Contoh endpoint
 var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"

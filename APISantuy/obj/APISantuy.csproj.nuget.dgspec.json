@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\HAPE\\Desktop\\Test Skill Digdaya Olah Teknologi Indonesia  .Net\\APIsantuy\\APISantuy.csproj": {}
+    "C:\\Users\\HAPE\\Desktop\\Test Skill Digdaya Olah Teknologi Indonesia  .Net\\APISantuy\\APISantuy.csproj": {}
   },
   "projects": {
-    "C:\\Users\\HAPE\\Desktop\\Test Skill Digdaya Olah Teknologi Indonesia  .Net\\APIsantuy\\APISantuy.csproj": {
+    "C:\\Users\\HAPE\\Desktop\\Test Skill Digdaya Olah Teknologi Indonesia  .Net\\APISantuy\\APISantuy.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\HAPE\\Desktop\\Test Skill Digdaya Olah Teknologi Indonesia  .Net\\APIsantuy\\APISantuy.csproj",
+        "projectUniqueName": "C:\\Users\\HAPE\\Desktop\\Test Skill Digdaya Olah Teknologi Indonesia  .Net\\APISantuy\\APISantuy.csproj",
         "projectName": "APISantuy",
-        "projectPath": "C:\\Users\\HAPE\\Desktop\\Test Skill Digdaya Olah Teknologi Indonesia  .Net\\APIsantuy\\APISantuy.csproj",
+        "projectPath": "C:\\Users\\HAPE\\Desktop\\Test Skill Digdaya Olah Teknologi Indonesia  .Net\\APISantuy\\APISantuy.csproj",
         "packagesPath": "C:\\Users\\HAPE\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\HAPE\\Desktop\\Test Skill Digdaya Olah Teknologi Indonesia  .Net\\APIsantuy\\obj\\",
+        "outputPath": "C:\\Users\\HAPE\\Desktop\\Test Skill Digdaya Olah Teknologi Indonesia  .Net\\APISantuy\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\HAPE\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -45,6 +45,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.4, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[8.0.10, )"
@@ -54,6 +58,8 @@
               "version": "[9.0.4, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
               "target": "Package",
               "version": "[9.0.4, )"
             },
