@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "adg7sv5suhI=",
+  "dgSpecHash": "yXYA4MNISkQ=",
   "success": true,
-  "projectFilePath": "C:\\Users\\HAPE\\Desktop\\Test Skill Digdaya Olah Teknologi Indonesia  .Net\\APIsantuy\\APISantuy.csproj",
+  "projectFilePath": "C:\\Users\\HAPE\\Desktop\\Test Skill Digdaya Olah Teknologi Indonesia  .Net\\apisantuy\\APISantuy.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\HAPE\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\HAPE\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
