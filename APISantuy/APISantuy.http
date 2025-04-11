@@ -1,0 +1,6 @@
+@APISantuy_HostAddress = http://localhost:5261
+
+GET {{APISantuy_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
