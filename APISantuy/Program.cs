@@ -2,6 +2,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    context.Database.Migrate(); 
+    DbSeeder.Seed(context);
+}
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 var jwtConfig = builder.Configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwtConfig["Key"] ?? "default-secret-key");
 
-// Tambahkan layanan
+// Tambahkan service
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -37,7 +45,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-var app = builder.Build(); // Ini harus duluan sebelum dipakai
+var app = builder.Build(); 
 
 // Konfigurasi middleware
 if (app.Environment.IsDevelopment())
