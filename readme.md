@@ -1,3 +1,4 @@
-Kandidat Syaikhul S R
-.NET
-sql server
+# Kandidat: Syaikhul S R
+
+## Sertifikat Hackerrank
+- [Sertifikat HackerRank - .NET](/Docs/sertifikat%20HCR.png)
