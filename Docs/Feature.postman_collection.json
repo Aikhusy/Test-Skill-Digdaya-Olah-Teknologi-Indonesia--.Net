@@ -1,0 +1,243 @@
+{
+	"info": {
+		"_postman_id": "86b31e65-d71f-4cf2-84ab-081401a91a80",
+		"name": "Feature",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32530862"
+	},
+	"item": [
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Trip",
+					"item": [
+						{
+							"name": "get all tanpa jwt",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/trip",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"trip"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get all",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{jwt}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseurl}}/api/trip",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"trip"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{jwt}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"EmployeeId\": 2,\r\n  \"CityId\": 1506,\r\n  \"StartDate\": \"2025-04-15T08:00:00\",\r\n  \"EndDate\": \"2025-04-20T17:00:00\",\r\n  \"Purpose\": \"Conference and meeting with clients\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/api/trip",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"trip"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{jwt}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"Purpose\": \"Vacation\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/api/trip/7",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"trip",
+										"7"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{jwt}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseurl}}/api/trip/9",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"trip",
+										"9"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "PublicAPI",
+					"item": [
+						{
+							"name": "Endpoints",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://alamat.thecloudalert.com/api/kabkota/get",
+									"protocol": "https",
+									"host": [
+										"alamat",
+										"thecloudalert",
+										"com"
+									],
+									"path": [
+										"api",
+										"kabkota",
+										"get"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "City",
+					"item": [
+						{
+							"name": "get all City",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{jwt}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseurl}}/api/city",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"city"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "UserLogs",
+					"item": [
+						{
+							"name": "get all Log",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{jwt}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseurl}}/api/userlog",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"userlog"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "UserBiasa",
+			"item": []
+		}
+	]
+}
