@@ -7,7 +7,8 @@ public class User
     public string FullName { get; set; }
     public string Email { get; set; }
     public string PasswordHash { get; set; }
-    public string Role { get; set; } // "Pegawai" / "HumanCapital"
+    public string Role { get; set; } 
+    // Admin, Employee
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public DateTime? DeletedAt { get; set; }
