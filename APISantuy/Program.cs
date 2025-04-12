@@ -36,6 +36,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<CityPublicApiSeeder>();
 
 var app = builder.Build();
 
@@ -46,6 +47,13 @@ using (var scope = app.Services.CreateScope())
     context.Database.Migrate(); 
     DbSeeder.Seed(context);
 }
+
+using (var scope = app.Services.CreateScope())
+{
+    var seeder = scope.ServiceProvider.GetRequiredService<CityPublicApiSeeder>();
+    await seeder.SeedCitiesFromPublicApiAsync();
+}
+
 
 // Konfigurasi middleware
 if (app.Environment.IsDevelopment())
