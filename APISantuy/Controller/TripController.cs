@@ -15,67 +15,78 @@ public class TripController : ControllerBase
         _context = context;
     }
 
-    // GET: api/trip
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var trips = await _context.Trips.Where(t => t.DeletedAt == null)
-            .Include(t => t.Employee)
-            .Include(t => t.AssignedBy)
-            .Include(t => t.City)
-            .Select(t => new TripGetResponse
-            {
-                Id = t.Id,
-                EmployeeName = t.Employee.FullName, 
-                AssignedByName = t.AssignedBy.FullName,
-                CityName = t.City.Name,
-                StartDate = t.StartDate,
-                EndDate = t.EndDate,
-                Purpose = t.Purpose
-            })
-            .ToListAsync();
-
-        return Ok(new
+        try
         {
-            status = 200,
-            message = "Data trips berhasil diambil.",
-            result = trips
-        });
+            var userEmail = User.FindFirst(ClaimTypes.Name)?.Value;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+            if (user == null)
+                return NotFound(new { status = 404, message = "Not Found" });
+
+            var trips = await _context.Trips.Where(t => t.DeletedAt == null)
+                .Include(t => t.Employee)
+                .Include(t => t.AssignedBy)
+                .Include(t => t.City)
+                .Select(t => new TripGetResponse
+                {
+                    Id = t.Id,
+                    EmployeeName = t.Employee.FullName,
+                    AssignedByName = t.AssignedBy.FullName,
+                    CityName = t.City.Name,
+                    StartDate = t.StartDate,
+                    EndDate = t.EndDate,
+                    Purpose = t.Purpose
+                })
+                .ToListAsync();
+
+            return Ok(new { status = 200, message = "OK", result = trips });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { status = 500, message = "Internal Server Error: " + ex.Message });
+        }
     }
 
-    // GET: api/trip/{id}
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var trip = await _context.Trips.Where(t => t.DeletedAt == null)
-            .Include(t => t.Employee)
-            .Include(t => t.AssignedBy)
-            .Include(t => t.City)
-            .FirstOrDefaultAsync(t => t.Id == id);
-
-        if (trip == null)
-            return NotFound(new { status = 404, message = "Trip tidak ditemukan." });
-
-        var response = new TripGetResponse
+        try
         {
-            Id = trip.Id,
-            EmployeeName = trip.Employee.FullName,
-            AssignedByName = trip.AssignedBy.FullName,
-            CityName = trip.City.Name,
-            StartDate = trip.StartDate,
-            EndDate = trip.EndDate,
-            Purpose = trip.Purpose
-        };
+            var userEmail = User.FindFirst(ClaimTypes.Name)?.Value;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+            if (user == null)
+                return NotFound(new { status = 404, message = "Not Found" });
 
-        return Ok(new
+            var trip = await _context.Trips.Where(t => t.DeletedAt == null)
+                .Include(t => t.Employee)
+                .Include(t => t.AssignedBy)
+                .Include(t => t.City)
+                .FirstOrDefaultAsync(t => t.Id == id);
+
+            if (trip == null)
+                return Ok(new { status = 200, message = "OK", result = (object)null });
+
+            var response = new TripGetResponse
+            {
+                Id = trip.Id,
+                EmployeeName = trip.Employee.FullName,
+                AssignedByName = trip.AssignedBy.FullName,
+                CityName = trip.City.Name,
+                StartDate = trip.StartDate,
+                EndDate = trip.EndDate,
+                Purpose = trip.Purpose
+            };
+
+            return Ok(new { status = 200, message = "OK", result = response });
+        }
+        catch (Exception ex)
         {
-            status = 200,
-            message = "Trip berhasil ditemukan.",
-            result = new[] { response }
-        });
+            return StatusCode(500, new { status = 500, message = "Internal Server Error: " + ex.Message });
+        }
     }
 
-    // POST: api/trip
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] TripCreateRequest request)
     {
@@ -83,11 +94,8 @@ public class TripController : ControllerBase
         {
             var userEmail = User.FindFirst(ClaimTypes.Name)?.Value;
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
-
             if (user == null)
-            {
-                return NotFound(new { status = 404, message = "User tidak ditemukan." });
-            }
+                return NotFound(new { status = 404, message = "Not Found" });
 
             var trip = new Trip
             {
@@ -123,104 +131,97 @@ public class TripController : ControllerBase
                 Purpose = trip.Purpose
             };
 
-            return Ok(new
-            {
-                status = 200,
-                message = "Berhasil",
-                result = new[] { response }
-            });
+            return Ok(new { status = 200, message = "OK", result = new[] { response } });
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new
-            {
-                status = 500,
-                message = "Internal Server Error: " + ex.Message
-            });
+            return StatusCode(500, new { status = 500, message = "Internal Server Error: " + ex.Message });
         }
     }
 
-    // PUT: api/trip/{id}
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] TripUpdateRequest request)
     {
-        var userEmail = User.FindFirst(ClaimTypes.Name)?.Value;
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
-
-        if (user == null)
+        try
         {
-            return NotFound(new { status = 404, message = "User tidak ditemukan." });
+            var userEmail = User.FindFirst(ClaimTypes.Name)?.Value;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+            if (user == null)
+                return NotFound(new { status = 404, message = "Not Found" });
+
+            var trip = await _context.Trips.FindAsync(id);
+            if (trip == null)
+                return Ok(new { status = 200, message = "OK", result = (object)null });
+
+            trip.EmployeeId = request.EmployeeId;
+            trip.AssignedById = user.Id;
+            trip.CityId = request.CityId;
+            trip.StartDate = request.StartDate;
+            trip.EndDate = request.EndDate;
+            trip.Purpose = request.Purpose;
+            trip.UpdatedAt = DateTime.UtcNow;
+
+            var userLog = new UserLog
+            {
+                UserId = user.Id,
+                LogMessage = $"Updated trip with ID: {id}.",
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.UserLogs.Add(userLog);
+            await _context.SaveChangesAsync();
+
+            var response = new TripUpdateResponse
+            {
+                Id = trip.Id,
+                EmployeeId = trip.EmployeeId,
+                AssignedById = trip.AssignedById,
+                CityId = trip.CityId,
+                StartDate = trip.StartDate,
+                EndDate = trip.EndDate,
+                Purpose = trip.Purpose,
+            };
+
+            return Ok(new { status = 200, message = "OK", result = response });
         }
-
-        var trip = await _context.Trips.FindAsync(id);
-        if (trip == null)
-            return NotFound(new { status = 404, message = "Trip tidak ditemukan." });
-
-        trip.EmployeeId = request.EmployeeId;
-        trip.AssignedById = user.Id;
-        trip.CityId = request.CityId;
-        trip.StartDate = request.StartDate;
-        trip.EndDate = request.EndDate;
-        trip.Purpose = request.Purpose;
-        trip.UpdatedAt = DateTime.UtcNow;
-
-        var userLog = new UserLog
+        catch (Exception ex)
         {
-            UserId = user.Id,
-            LogMessage = $"Updated trip with ID: {id}.",
-            CreatedAt = DateTime.UtcNow
-        };
-        _context.UserLogs.Add(userLog);
-
-        await _context.SaveChangesAsync();
-
-        var response = new TripUpdateResponse
-        {
-            Id = trip.Id,
-            EmployeeId = trip.EmployeeId,
-            AssignedById = trip.AssignedById,
-            CityId = trip.CityId,
-            StartDate = trip.StartDate,
-            EndDate = trip.EndDate,
-            Purpose = trip.Purpose,
-        };
-
-        return Ok(new
-        {
-            status = 200,
-            message = "Trip berhasil diperbarui.",
-            result = new[] { response }
-        });
+            return StatusCode(500, new { status = 500, message = "Internal Server Error: " + ex.Message });
+        }
     }
 
-    // DELETE: api/trip/{id}
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var trip = await _context.Trips.FindAsync(id);
-        if (trip == null)
-            return NotFound(new { status = 404, message = "Trip tidak ditemukan." });
-
-        trip.DeletedAt = DateTime.UtcNow;
-        trip.UpdatedAt = DateTime.UtcNow;
-
-        var userEmail = User.FindFirst(ClaimTypes.Name)?.Value;
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
-
-        var userLog = new UserLog
+        try
         {
-            UserId = user.Id,
-            LogMessage = $"Soft deleted trip with ID: {id}.",
-            CreatedAt = DateTime.UtcNow
-        };
-        _context.UserLogs.Add(userLog);
+            var userEmail = User.FindFirst(ClaimTypes.Name)?.Value;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+            if (user == null)
+                return NotFound(new { status = 404, message = "Not Found" });
 
-        await _context.SaveChangesAsync();
+            var trip = await _context.Trips.FindAsync(id);
+            if (trip == null)
+                return Ok(new { status = 200, message = "OK", result = (object)null });
 
-        return Ok(new
+            trip.DeletedAt = DateTime.UtcNow;
+            trip.UpdatedAt = DateTime.UtcNow;
+
+            var userLog = new UserLog
+            {
+                UserId = user.Id,
+                LogMessage = $"Soft deleted trip with ID: {id}.",
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.UserLogs.Add(userLog);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { status = 200, message = "OK", result = (object)null });
+        }
+        catch (Exception ex)
         {
-            status = 200,
-            message = "Trip berhasil dihapus (soft delete)."
-        });
+            return StatusCode(500, new { status = 500, message = "Internal Server Error: " + ex.Message });
+        }
     }
 }
