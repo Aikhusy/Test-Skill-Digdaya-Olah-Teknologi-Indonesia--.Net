@@ -170,3 +170,4 @@ C:\Users\HAPE\Desktop\Test Skill Digdaya Olah Teknologi Indonesia  .Net\APISantu
 C:\Users\HAPE\Desktop\Test Skill Digdaya Olah Teknologi Indonesia  .Net\APISantuy\obj\Debug\net8.0\APISantuy.genruntimeconfig.cache
 C:\Users\HAPE\Desktop\Test Skill Digdaya Olah Teknologi Indonesia  .Net\APISantuy\obj\Debug\net8.0\ref\APISantuy.dll
 C:\Users\HAPE\Desktop\Test Skill Digdaya Olah Teknologi Indonesia  .Net\apisantuy\bin\Debug\net8.0\BCrypt.Net-Next.dll
+C:\Users\HAPE\Desktop\Test Skill Digdaya Olah Teknologi Indonesia  .Net\apisantuy\bin\Debug\net8.0\Newtonsoft.Json.dll
