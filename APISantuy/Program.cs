@@ -55,6 +55,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 
+
 // Konfigurasi middleware
 if (app.Environment.IsDevelopment())
 {
@@ -69,6 +70,12 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.Use(async (context, next) =>
+{
+    var routeData = context.GetRouteData();
+    await next();
+});
 
 // Contoh endpoint
 var summaries = new[]
