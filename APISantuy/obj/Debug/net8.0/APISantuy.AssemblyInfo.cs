@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("APISantuy")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+98c8fefcfc62d9ab2764fe3f80df721a50e6baf8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+167b6e392bde4a0461cbb658be6242f285e78a9b")]
 [assembly: System.Reflection.AssemblyProductAttribute("APISantuy")]
 [assembly: System.Reflection.AssemblyTitleAttribute("APISantuy")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

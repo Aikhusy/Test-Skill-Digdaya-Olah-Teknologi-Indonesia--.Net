@@ -1,8 +1,7 @@
-// Controllers/AuthController.cs
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
@@ -24,31 +23,41 @@ public class AuthController : ControllerBase
     {
         var user = _context.Users.SingleOrDefault(u => u.Email == request.Email);
         if (user == null)
-            return Unauthorized("Email tidak ditemukan.");
-
-        if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
         {
-            var failedLog = new UserLog
+            return Ok(new
             {
-                UserId = user.Id,
-                LogMessage = "Login attempt failed: Incorrect password.",
-                CreatedAt = DateTime.UtcNow
-            };
-            _context.UserLogs.Add(failedLog);
-            _context.SaveChanges();
-
-            return Unauthorized("Password salah.");
+                status = 401,
+                message = "Email tidak ditemukan.",
+                result = new object[] { }
+            });
         }
 
-            
+        var isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
+        var logMessage = isPasswordValid ? "User successfully logged in." : "Login attempt failed: Incorrect password.";
 
+        _context.UserLogs.Add(new UserLog
+        {
+            UserId = user.Id,
+            LogMessage = logMessage,
+            CreatedAt = DateTime.UtcNow
+        });
+        _context.SaveChanges();
+
+        if (!isPasswordValid)
+        {
+            return Ok(new
+            {
+                status = 401,
+                message = "Password salah.",
+                result = new object[] { }
+            });
+        }
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new[]
+            Subject = new ClaimsIdentity(new[] 
             {
                 new Claim(ClaimTypes.Name, user.Email),
                 new Claim(ClaimTypes.Role, user.Role)
@@ -63,20 +72,11 @@ public class AuthController : ControllerBase
         var token = tokenHandler.CreateToken(tokenDescriptor);
         var jwt = tokenHandler.WriteToken(token);
 
-        var userLog = new UserLog
+        return Ok(new
         {
-            UserId = user.Id,
-            LogMessage = "User successfully logged in.",
-            CreatedAt = DateTime.UtcNow
-        };
-        
-        _context.UserLogs.Add(userLog);
-        _context.SaveChanges();
-
-        return Ok(new LoginResponse
-        {
-            Token = jwt,
-            Role = user.Role
+            status = 200,
+            message = "OK",
+            result = new object[] { new { token = jwt, role = user.Role } }
         });
     }
 
@@ -85,53 +85,71 @@ public class AuthController : ControllerBase
     public IActionResult GetProfile()
     {
         var email = User.FindFirst(ClaimTypes.Name)?.Value;
-
         if (email == null)
-            return Unauthorized("Token tidak valid.");
+        {
+            return Ok(new
+            {
+                status = 401,
+                message = "Token tidak valid.",
+                result = new object[] { }
+            });
+        }
 
         var user = _context.Users.SingleOrDefault(u => u.Email == email);
-
         if (user == null)
-            return NotFound("Pengguna tidak ditemukan.");
-
-        var response = new ProfileResponse
         {
-            Id = user.Id,
-            FullName = user.FullName,
-            Email = user.Email,
-            Role = user.Role
-        };
+            return Ok(new
+            {
+                status = 404,
+                message = "Pengguna tidak ditemukan.",
+                result = new object[] { }
+            });
+        }
 
-        return Ok(response);
+        return Ok(new
+        {
+            status = 200,
+            message = "OK",
+            result = new object[] { new 
+            { 
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email,
+                Role = user.Role
+            }}
+        });
     }
 
     [HttpPost("logout")]
     [Authorize]
     public IActionResult Logout()
     {
-        // Untuk logout menggunakan JWT, tidak ada perubahan di server, cukup beri respon sukses.
-        // Biasanya di sisi klien yang akan menghapus token yang tersimpan di localStorage/sessionStorage.
-
         var email = User.FindFirst(ClaimTypes.Name)?.Value;
         var user = _context.Users.SingleOrDefault(u => u.Email == email);
 
         if (user == null)
-            return NotFound("Pengguna tidak ditemukan.");
+        {
+            return Ok(new
+            {
+                status = 404,
+                message = "Pengguna tidak ditemukan.",
+                result = new object[] { }
+            });
+        }
 
-        // Jika Anda ingin mencatat log/logout yang berhasil, bisa ditambahkan di sini.
-        var logoutLog = new UserLog
+        _context.UserLogs.Add(new UserLog
         {
             UserId = user.Id,
             LogMessage = "User logged out successfully.",
             CreatedAt = DateTime.UtcNow
-        };
-
-        _context.UserLogs.Add(logoutLog);
+        });
         _context.SaveChanges();
 
-        // Menyediakan pesan logout
-        return Ok(new { message = "Berhasil logout." });
+        return Ok(new
+        {
+            status = 200,
+            message = "OK",
+            result = new object[] { "Berhasil logout." }
+        });
     }
-
-
 }

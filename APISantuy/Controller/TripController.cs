@@ -1,7 +1,8 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+
 
 [ApiController]
 [Route("api/[controller]")]
@@ -23,7 +24,7 @@ public class TripController : ControllerBase
             var userEmail = User.FindFirst(ClaimTypes.Name)?.Value;
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
             if (user == null)
-                return NotFound(new { status = 404, message = "Not Found" });
+                return Ok(new { status = 404, message = "Not Found", result = new object[] { } });
 
             var trips = await _context.Trips.Where(t => t.DeletedAt == null)
                 .Include(t => t.Employee)
@@ -45,7 +46,7 @@ public class TripController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { status = 500, message = "Internal Server Error: " + ex.Message });
+            return StatusCode(500, new { status = 500, message = "Internal Server Error: " + ex.Message, result = new object[] { } });
         }
     }
 
@@ -57,7 +58,7 @@ public class TripController : ControllerBase
             var userEmail = User.FindFirst(ClaimTypes.Name)?.Value;
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
             if (user == null)
-                return NotFound(new { status = 404, message = "Not Found" });
+                return Ok(new { status = 404, message = "Not Found", result = new object[] { } });
 
             var trip = await _context.Trips.Where(t => t.DeletedAt == null)
                 .Include(t => t.Employee)
@@ -83,7 +84,7 @@ public class TripController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { status = 500, message = "Internal Server Error: " + ex.Message });
+            return StatusCode(500, new { status = 500, message = "Internal Server Error: " + ex.Message, result = new object[] { } });
         }
     }
 
@@ -95,7 +96,7 @@ public class TripController : ControllerBase
             var userEmail = User.FindFirst(ClaimTypes.Name)?.Value;
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
             if (user == null)
-                return NotFound(new { status = 404, message = "Not Found" });
+                return Ok(new { status = 404, message = "Not Found", result = new object[] { } });
 
             var trip = new Trip
             {
@@ -135,7 +136,7 @@ public class TripController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { status = 500, message = "Internal Server Error: " + ex.Message });
+            return StatusCode(500, new { status = 500, message = "Internal Server Error: " + ex.Message, result = new object[] { } });
         }
     }
 
@@ -147,18 +148,28 @@ public class TripController : ControllerBase
             var userEmail = User.FindFirst(ClaimTypes.Name)?.Value;
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
             if (user == null)
-                return NotFound(new { status = 404, message = "Not Found" });
+                return Ok(new { status = 404, message = "Not Found", result = new object[] { } });
 
             var trip = await _context.Trips.FindAsync(id);
             if (trip == null)
                 return Ok(new { status = 200, message = "OK", result = (object)null });
 
-            trip.EmployeeId = request.EmployeeId;
-            trip.AssignedById = user.Id;
-            trip.CityId = request.CityId;
-            trip.StartDate = request.StartDate;
-            trip.EndDate = request.EndDate;
-            trip.Purpose = request.Purpose;
+            // Update only properties that are present in the request (if not null)
+            if (request.EmployeeId.HasValue)
+                trip.EmployeeId = request.EmployeeId.Value;
+
+            if (request.CityId.HasValue)
+                trip.CityId = request.CityId.Value;
+
+            if (request.StartDate.HasValue)
+                trip.StartDate = request.StartDate.Value;
+
+            if (request.EndDate.HasValue)
+                trip.EndDate = request.EndDate.Value;
+
+            if (!string.IsNullOrEmpty(request.Purpose))
+                trip.Purpose = request.Purpose;
+
             trip.UpdatedAt = DateTime.UtcNow;
 
             var userLog = new UserLog
@@ -179,14 +190,14 @@ public class TripController : ControllerBase
                 CityId = trip.CityId,
                 StartDate = trip.StartDate,
                 EndDate = trip.EndDate,
-                Purpose = trip.Purpose,
+                Purpose = trip.Purpose
             };
 
             return Ok(new { status = 200, message = "OK", result = response });
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { status = 500, message = "Internal Server Error: " + ex.Message });
+            return StatusCode(500, new { status = 500, message = "Internal Server Error: " + ex.Message, result = new object[] { } });
         }
     }
 
@@ -198,7 +209,7 @@ public class TripController : ControllerBase
             var userEmail = User.FindFirst(ClaimTypes.Name)?.Value;
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
             if (user == null)
-                return NotFound(new { status = 404, message = "Not Found" });
+                return Ok(new { status = 404, message = "Not Found", result = new object[] { } });
 
             var trip = await _context.Trips.FindAsync(id);
             if (trip == null)
@@ -221,7 +232,7 @@ public class TripController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { status = 500, message = "Internal Server Error: " + ex.Message });
+            return StatusCode(500, new { status = 500, message = "Internal Server Error: " + ex.Message, result = new object[] { } });
         }
     }
 }

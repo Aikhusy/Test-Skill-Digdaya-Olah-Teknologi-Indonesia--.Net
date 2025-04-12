@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+
 
 [ApiController]
 [Route("api/[controller]")]
@@ -17,41 +19,85 @@ public class UserLogController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var logs = await _context.UserLogs
-            .Include(l => l.User)
-            .Select(l => new
-            {
-                Id = l.Id,
-                UserName = l.User.FullName,
-                UserEmail = l.User.Email,
-                LogMessage = l.LogMessage,
-                CreatedAt = l.CreatedAt
-            })
-            .OrderByDescending(l => l.CreatedAt)
-            .ToListAsync();
-
-        return Ok(logs);
-    }
-
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
-    {
-        var log = await _context.UserLogs
-            .Include(l => l.User)
-            .FirstOrDefaultAsync(l => l.Id == id);
-
-        if (log == null)
-            return NotFound();
-
-        var response = new
+        try
         {
-            Id = log.Id,
-            UserName = log.User.FullName,
-            UserEmail = log.User.Email,
-            LogMessage = log.LogMessage,
-            CreatedAt = log.CreatedAt
-        };
+            var logs = await _context.UserLogs
+                .Include(l => l.User)
+                .Select(l => new
+                {
+                    Id = l.Id,
+                    UserName = l.User.FullName,
+                    UserEmail = l.User.Email,
+                    LogMessage = l.LogMessage,
+                    CreatedAt = l.CreatedAt
+                })
+                .OrderByDescending(l => l.CreatedAt)
+                .ToListAsync();
 
-        return Ok(response);
+            return Ok(new
+            {
+                status = 200,
+                message = "OK",
+                result = logs
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                status = 500,
+                message = "Internal Server Error: " + ex.Message,
+                result = new object[] { }
+            });
+        }
     }
+
+    [HttpGet("user/{userId}")]
+    public async Task<IActionResult> GetByUserId(int userId)
+    {
+        try
+        {
+            var log = await _context.UserLogs
+                .Include(l => l.User)
+                .Where(l => l.UserId == userId)
+                .OrderByDescending(l => l.CreatedAt)
+                .FirstOrDefaultAsync();
+
+            if (log == null)
+            {
+                return Ok(new
+                {
+                    status = 200,
+                    message = "OK",
+                    result = (object)null
+                });
+            }
+
+            var response = new
+            {
+                Id = log.Id,
+                UserName = log.User.FullName,
+                UserEmail = log.User.Email,
+                LogMessage = log.LogMessage,
+                CreatedAt = log.CreatedAt
+            };
+
+            return Ok(new
+            {
+                status = 200,
+                message = "OK",
+                result = response
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                status = 500,
+                message = "Internal Server Error: " + ex.Message,
+                result = new object[] { }
+            });
+        }
+    }
+
 }
